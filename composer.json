@@ -1,0 +1,14 @@
+{
+    "name": "novuso/framework",
+    "description": "Web application framework for PHP 5.4+",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Novuso\\Component\\Framework": "src",
+            "Novuso\\Test\\Framework": "tests"
+        }
+    }
+}

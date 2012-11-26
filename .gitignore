@@ -1,0 +1,7 @@
+vendor
+api
+cov
+composer.lock
+nbproject
+*.sublime-project
+*.sublime-workspace
