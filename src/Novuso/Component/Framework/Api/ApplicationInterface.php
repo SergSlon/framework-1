@@ -13,6 +13,7 @@ namespace Novuso\Component\Framework\Api;
 
 interface ApplicationInterface
 {
+    public function start();
 }
 
 /* End of file ApplicationInterface.php */

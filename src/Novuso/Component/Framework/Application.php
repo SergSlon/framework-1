@@ -12,9 +12,21 @@
 namespace Novuso\Component\Framework;
 
 use Novuso\Component\Framework\Api\ApplicationInterface;
+use Novuso\Component\Config\ConfigContainer;
 
 class Application implements ApplicationInterface
 {
+    protected $config;
+
+    public function __construct(array $config)
+    {
+        $this->config = new ConfigContainer($config);
+    }
+
+    public function start()
+    {
+        
+    }
 }
 
 /* End of file Application.php */
