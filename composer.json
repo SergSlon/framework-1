@@ -3,7 +3,28 @@
     "description": "Web application framework for PHP 5.4+",
     "license": "MIT",
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "doctrine/orm": "2.3.*",
+        "novuso/config": "dev-master",
+        "novuso/data": "dev-master",
+        "novuso/module": "dev-master",
+        "novuso/view": "dev-master",
+        "monolog/monolog": "1.2.*",
+        "symfony/config": "2.1.*",
+        "symfony/console": "2.1.*",
+        "symfony/dependency-injection": "2.1.*",
+        "symfony/event-dispatcher": "2.1.*",
+        "symfony/filesystem": "2.1.*",
+        "symfony/finder": "2.1.*",
+        "symfony/form": "2.1.*",
+        "symfony/http-foundation": "2.1.*",
+        "symfony/http-kernel": "2.1.*",
+        "symfony/routing": "2.1.*",
+        "symfony/security": "2.1.*",
+        "symfony/serializer": "2.1.*",
+        "symfony/translation": "2.1.*",
+        "symfony/validator": "2.1.*",
+        "symfony/yaml": "2.1.*"
     },
     "autoload": {
         "psr-0": {
