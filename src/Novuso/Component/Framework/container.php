@@ -17,6 +17,15 @@ $container = new ContainerBuilder();
 $container->register('request', 'Symfony\Component\HttpFoundation\Request')
     ->setFactoryMethod('createFromGlobals');
 
+$container->register('filelocator', 'Symfony\Component\Config\FileLocator')
+    ->setArguments(['%route.paths%']);
+
+$container->register('route.loader', 'Symfony\Component\Routing\Loader\PhpFileLoader')
+    ->setArguments([new Reference['filelocator']]);
+
+$container->register('router', 'Novuso\Component\Framework\Routing\Router')
+    ->setArguments([new Reference['route.loader'], '%route.file%']);
+
 $container->register('context', 'Symfony\Component\Routing\RequestContext')
     ->addMethodCall('fromRequest', [new Reference('request')]);
 
