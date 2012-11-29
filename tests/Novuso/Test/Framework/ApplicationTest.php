@@ -20,7 +20,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->app = new Application();
+        $this->app = new Application($this->getConfig());
     }
 
     public function testInterface()
@@ -29,6 +29,11 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
             'Novuso\Component\Framework\Api\ApplicationInterface',
             $this->app
         );
+    }
+
+    private function getConfig()
+    {
+        return [];
     }
 }
 

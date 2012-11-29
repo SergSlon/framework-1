@@ -17,15 +17,29 @@ use Novuso\Component\Config\ConfigContainer;
 class Application implements ApplicationInterface
 {
     protected $config;
+    protected $container;
 
     public function __construct(array $config)
     {
         $this->config = new ConfigContainer($config);
+        $this->container = require __DIR__.'/container.php';
+        $this->initialize();
     }
 
     public function start()
     {
-        
+        // must load routes prior to this step
+        // $this->container->get('dispatcher')->addSubscriber($this);
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [];
+    }
+
+    protected function initialize()
+    {
+
     }
 }
 
