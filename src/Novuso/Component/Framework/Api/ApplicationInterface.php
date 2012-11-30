@@ -11,7 +11,9 @@
 
 namespace Novuso\Component\Framework\Api;
 
-interface ApplicationInterface
+use Novuso\Component\Event\Api\EventSubscriberInterface;
+
+interface ApplicationInterface extends EventSubscriberInterface
 {
     public function start();
 }

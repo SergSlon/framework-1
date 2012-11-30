@@ -13,11 +13,14 @@ namespace Novuso\Component\Framework;
 
 use Novuso\Component\Framework\Api\ApplicationInterface;
 use Novuso\Component\Config\Api\ConfigContainerInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class Application implements ApplicationInterface
 {
     protected $config;
     protected $container;
+    protected $request;
+    protected $router;
 
     public function __construct(ConfigContainerInterface $config)
     {
@@ -28,18 +31,55 @@ class Application implements ApplicationInterface
 
     public function start()
     {
-        // must load routes prior to this step
-        // $this->container->get('dispatcher')->addSubscriber($this);
+        $this->container->get('event.manager')->addSubscriber($this);
+    }
+
+    public function onKernelRequest()
+    {
+
+    }
+
+    public function onKernelController()
+    {
+
+    }
+
+    public function onKernelView()
+    {
+
+    }
+
+    public function onKernelResponse()
+    {
+
+    }
+
+    public function onKernelTerminate()
+    {
+
+    }
+
+    public function onKernelException()
+    {
+        
     }
 
     public static function getSubscribedEvents()
     {
-        return [];
+        return [
+            KernelEvents::REQUEST    => 'onKernelRequest',
+            KernelEvents::CONTROLLER => 'onKernelController',
+            KernelEvents::VIEW       => 'onKernelView',
+            KernelEvents::RESPONSE   => 'onKernelResponse',
+            KernelEvents::TERMINATE  => 'onKernelTerminate',
+            KernelEvents::EXCEPTION  => 'onKernelException'
+        ];
     }
 
     protected function initialize()
     {
-
+        $this->request = $this->container->get('request');
+        $this->router = $this->container->get('router');
     }
 }
 

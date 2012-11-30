@@ -30,6 +30,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
             'Novuso\Component\Framework\Api\ApplicationInterface',
             $this->app
         );
+        $this->app->start();
     }
 
     private function getConfig()
