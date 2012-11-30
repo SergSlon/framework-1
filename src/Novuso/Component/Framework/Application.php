@@ -20,7 +20,12 @@ class Application implements ApplicationInterface
     protected $config;
     protected $container;
     protected $request;
+    protected $response;
     protected $router;
+    protected $eventManager;
+    protected $configManager;
+    protected $serviceManager;
+    protected $moduleManager;
 
     public function __construct(ConfigContainerInterface $config)
     {
@@ -31,7 +36,8 @@ class Application implements ApplicationInterface
 
     public function start()
     {
-        $this->container->get('event.manager')->addSubscriber($this);
+        $this->eventManager->addSubscriber($this->container->get('subscriber.router'));
+        $this->eventManager->addSubscriber($this->container->get('subscriber.response'));
     }
 
     public function onKernelRequest()
@@ -79,7 +85,28 @@ class Application implements ApplicationInterface
     protected function initialize()
     {
         $this->request = $this->container->get('request');
+        $this->response = $this->container->get('response');
         $this->router = $this->container->get('router');
+        $this->eventManager = $this->container->get('event.manager');
+        $this->configManager = $this->container->get('config.manager');
+        $this->serviceManager = $this->container->get('service.manager');
+        $this->moduleManager = $this->container->get('module.manager');
+        // prepare event manager
+        $this->eventManager->addSubscriber($this);
+        // fire module load events
+        $this->loadModules();
+        // application ready
+        $this->applicationReady();
+    }
+
+    protected function loadModules()
+    {
+
+    }
+
+    protected function applicationReady()
+    {
+        
     }
 }
 

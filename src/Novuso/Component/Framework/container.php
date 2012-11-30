@@ -70,11 +70,29 @@ $container->set('subscriber.response', function ()
 
 $container->set('event.manager', function ($container)
 {
-    $eventManager = new Novuso\Component\Event\EventManager();
-    $eventManager->addSubscriber($container->get('subscriber.router'));
-    $eventManager->addSubscriber($container->get('subscriber.response'));
+    return new Novuso\Component\Event\EventManager();
+});
 
-    return $eventManager;
+$container->set('config.manager', function ()
+{
+    $configManager = new Novuso\Component\Config\ConfigManager();
+    $configManager->addLoader(new Novuso\Component\Config\Loader\IniFileLoader());
+    $configManager->addLoader(new Novuso\Component\Config\Loader\JsonFileLoader());
+    $configManager->addLoader(new Novuso\Component\Config\Loader\PhpFileLoader());
+    $configManager->addLoader(new Novuso\Component\Config\Loader\XmlFileLoader());
+    $configManager->addLoader(new Novuso\Component\Config\Loader\YamlFileLoader());
+
+    return $configManager;
+});
+
+$container->set('service.manager', function ()
+{
+    return new Novuso\Component\Container\ServiceManager();
+});
+
+$container->set('module.manager', function ()
+{
+    return new Novuso\Component\Module\ModuleManager();
 });
 
 return $container;
