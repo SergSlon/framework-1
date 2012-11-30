@@ -13,6 +13,7 @@ namespace Novuso\Test\Framework;
 
 use PHPUnit_Framework_TestCase;
 use Novuso\Component\Framework\Application;
+use Novuso\Component\Config\ConfigContainer;
 
 class ApplicationTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +21,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->app = new Application($this->getConfig());
+        $this->app = new Application(new ConfigContainer($this->getConfig()));
     }
 
     public function testInterface()

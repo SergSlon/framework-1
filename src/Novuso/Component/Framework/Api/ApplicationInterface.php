@@ -11,9 +11,7 @@
 
 namespace Novuso\Component\Framework\Api;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-interface ApplicationInterface extends EventSubscriberInterface
+interface ApplicationInterface
 {
     public function start();
 }
