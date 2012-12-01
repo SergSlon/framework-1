@@ -68,6 +68,18 @@ $container->set('subscriber.response', function ()
     return new Symfony\Component\HttpKernel\EventListener\ResponseListener('UTF-8');
 });
 
+$container->set('subscriber.streamed', function ()
+{
+    return new Symfony\Component\HttpKernel\EventListener\StreamedResponseListener();
+});
+
+$container->set('subscriber.exception', function ($container)
+{
+    return new Symfony\Component\HttpKernel\EventListener\ExceptionListener(
+        'Novuso\Component\Framework\ErrorHandler::exceptionAction'
+    );
+});
+
 $container->set('event.manager', function ($container)
 {
     return new Novuso\Component\Event\EventManager();
@@ -90,9 +102,46 @@ $container->set('service.manager', function ()
     return new Novuso\Component\Container\ServiceManager();
 });
 
+$container->set('db.connection', function ($container)
+{
+    $config = $container->getParameter('config');
+    $db = $config->data->connection->toArray();
+    
+    return new Novuso\Component\Data\Connection(
+        $db['dsn'],
+        $db['username'],
+        $db['password'],
+        $db['driverOptions']
+    );
+});
+
+$container->set('orm.manager', function ($container)
+{
+    $connection = $container->get('db.connection');
+    $config = $container->getParameter('config');
+    $metadata = $config->data->metadataStrategy;
+    $runtime = $config->runtimeMode;
+    $prefix = $config->data->tablePrefix;
+
+    return new Novuso\Component\Data\OrmManager($connection, $metadata, $runtime, $prefix);
+});
+
 $container->set('module.manager', function ()
 {
     return new Novuso\Component\Module\ModuleManager();
+});
+
+$container->set('event.modules.resolve', function ()
+{
+    return new Novuso\Component\Module\Event\ResolveModulesEvent();
+});
+
+$container->set('kernel', function ($container)
+{
+    $eventManager = $container->get('event.manager');
+    $resolver = $container->get('resolver');
+
+    return new Novuso\Component\Kernel\Kernel($eventManager, $resolver);
 });
 
 return $container;

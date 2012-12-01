@@ -13,10 +13,17 @@ namespace Novuso\Component\Framework;
 
 use Novuso\Component\Framework\Api\ApplicationInterface;
 use Novuso\Component\Config\Api\ConfigContainerInterface;
+use Novuso\Component\Module\ModuleEvents;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class Application implements ApplicationInterface
 {
+    protected $kernel;
     protected $config;
     protected $container;
     protected $request;
@@ -25,12 +32,14 @@ class Application implements ApplicationInterface
     protected $eventManager;
     protected $configManager;
     protected $serviceManager;
+    protected $ormManager;
     protected $moduleManager;
 
     public function __construct(ConfigContainerInterface $config)
     {
         $this->config = $config;
         $this->container = require __DIR__.'/container.php';
+        $this->container->setParameter('config', $this->config);
         $this->initialize();
     }
 
@@ -38,36 +47,44 @@ class Application implements ApplicationInterface
     {
         $this->eventManager->addSubscriber($this->container->get('subscriber.router'));
         $this->eventManager->addSubscriber($this->container->get('subscriber.response'));
-    }
-
-    public function onKernelRequest()
-    {
-
-    }
-
-    public function onKernelController()
-    {
-
-    }
-
-    public function onKernelView()
-    {
-
-    }
-
-    public function onKernelResponse()
-    {
-
-    }
-
-    public function onKernelTerminate()
-    {
-
-    }
-
-    public function onKernelException()
-    {
+        $this->eventManager->addSubscriber($this->container->get('subscriber.exception'));
+        $this->eventManager->addSubscriber($this->container->get('subscriber.streamed'));
         
+        // temporary
+        ob_start();
+
+        $this->kernel = $this->container->get('kernel');
+        $this->response = $this->kernel->handle($this->request);
+        $this->response->send();
+        $this->kernel->terminate($this->request, $this->response);
+
+        // temporary
+        ob_end_clean();
+    }
+
+    public function onKernelRequest(GetResponseEvent $event)
+    {
+    }
+
+    public function onKernelController(FilterControllerEvent $event)
+    {
+    }
+
+    public function onKernelView(GetResponseForControllerResultEvent $event)
+    {
+        $response = $event->getControllerResult();
+        if (is_string($response)) {
+            $this->response->setContent($response);
+            $event->setResponse($this->response);
+        }
+    }
+
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+    }
+
+    public function onKernelTerminate(PostResponseEvent $event)
+    {
     }
 
     public static function getSubscribedEvents()
@@ -77,8 +94,7 @@ class Application implements ApplicationInterface
             KernelEvents::CONTROLLER => 'onKernelController',
             KernelEvents::VIEW       => 'onKernelView',
             KernelEvents::RESPONSE   => 'onKernelResponse',
-            KernelEvents::TERMINATE  => 'onKernelTerminate',
-            KernelEvents::EXCEPTION  => 'onKernelException'
+            KernelEvents::TERMINATE  => 'onKernelTerminate'
         ];
     }
 
@@ -87,26 +103,33 @@ class Application implements ApplicationInterface
         $this->request = $this->container->get('request');
         $this->response = $this->container->get('response');
         $this->router = $this->container->get('router');
+        
+        // temporary
+        $this->router->get('home', '/', [
+            '_controller' => function () {
+                return 'Hello World';
+            }
+        ]);
+        
         $this->eventManager = $this->container->get('event.manager');
         $this->configManager = $this->container->get('config.manager');
         $this->serviceManager = $this->container->get('service.manager');
+        $this->ormManager = $this->container->get('orm.manager');
         $this->moduleManager = $this->container->get('module.manager');
-        // prepare event manager
         $this->eventManager->addSubscriber($this);
-        // fire module load events
+        $this->eventManager->addSubscriber($this->moduleManager);
         $this->loadModules();
-        // application ready
         $this->applicationReady();
     }
 
     protected function loadModules()
     {
-
+        $resolve = $this->container->get('event.modules.resolve');
+        $resolved = $this->eventManager->dispatch(ModuleEvents::RESOLVE, $resolve);
     }
 
     protected function applicationReady()
     {
-        
     }
 }
 

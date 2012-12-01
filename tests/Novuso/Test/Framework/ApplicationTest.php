@@ -35,7 +35,30 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     private function getConfig()
     {
-        return [];
+        return [
+            'runtimeMode' => 'development',
+            'paths' => [
+                'root'    => __DIR__.'/Fixtures',
+                'config'  => __DIR__.'/Fixtures/config',
+                'module'  => __DIR__.'/Fixtures/module',
+                'public'  => __DIR__.'/Fixtures/public',
+                'storage' => __DIR__.'/Fixtures/storage',
+                'vendor'  => __DIR__.'/Fixtures/vendor'
+            ],
+            'data' => [
+                'connection' => [
+                    'dsn'           => 'sqlite:'.__DIR__.'/Fixtures/storage/database/application.sqlite',
+                    'username'      => null,
+                    'password'      => null,
+                    'driverOptions' => []
+                ],
+                'metadataStrategy' => 'annotation',
+                'tablePrefix'      => 'nfw_'
+            ],
+            'modules' => [
+                'Application'
+            ]
+        ];
     }
 }
 
