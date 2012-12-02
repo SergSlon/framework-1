@@ -46,11 +46,7 @@ class Application implements ApplicationInterface
         $this->container = require __DIR__.'/container.php';
         $this->configManager = $this->container->get('config.manager');
         $this->serviceManager = $this->container->get('service.manager');
-        foreach ($configFiles as $file) {
-            if (file_exists($file)) {
-                $this->config = $this->configManager->load('core', $file);
-            }
-        }
+        $this->loadConfigurationFiles($configFiles);
         $this->serviceManager->set('core', $this->container);
         $this->container->setParameter('config', $this->config);
         $this->config->setWritePermission(false);
@@ -112,6 +108,25 @@ class Application implements ApplicationInterface
             KernelEvents::CONTROLLER => 'onKernelController',
             KernelEvents::VIEW       => 'onKernelView'
         ];
+    }
+
+    protected function loadConfigurationFiles($configFiles)
+    {
+        foreach ($configFiles as $file) {
+            if (file_exists($file) && 'config' === basename(dirname($file))) {
+                $this->config = $this->configManager->load('core', $file);
+                break;
+            }
+        }
+        foreach ($configFiles as $file) {
+            if (isset($this->config->runtime_mode)) {
+                if (file_exists($file)
+                    && $this->config->runtime_mode === basename(dirname($file))) {
+                    $this->config = $this->configManager->load('core', $file);
+                    break;
+                }
+            }
+        }
     }
 
     protected function initialize()
