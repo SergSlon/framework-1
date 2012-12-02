@@ -52,7 +52,6 @@ class Application implements ApplicationInterface
         $this->container->setParameter('config', $this->config);
         $this->config->setWritePermission(false);
         $this->container->setWritePermission(false);
-        var_dump($this->config);
         $this->initialize();
     }
 
