@@ -21,7 +21,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->app = new Application(new ConfigContainer($this->getConfig()));
+        $this->app = new Application($this->getConfig());
     }
 
     public function testInterface()
@@ -35,23 +35,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     private function getConfig()
     {
-        return [
-            'runtimeMode' => 'development',
-            'paths' => [],
-            'data'  => [
-                'connection' => [
-                    'dsn'           => 'sqlite:'.__DIR__.'/Fixtures/storage/database/application.sqlite',
-                    'username'      => null,
-                    'password'      => null,
-                    'driverOptions' => []
-                ],
-                'metadataStrategy' => 'annotation',
-                'tablePrefix'      => 'nfw_'
-            ],
-            'modules' => [
-                'Novuso\Test\Framework\Stub\Application'
-            ]
-        ];
+        return __DIR__.'/Fixtures/config/application.php';
     }
 }
 

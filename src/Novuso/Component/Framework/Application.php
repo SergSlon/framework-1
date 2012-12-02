@@ -38,12 +38,22 @@ class Application implements ApplicationInterface
     protected $ormManager;
     protected $moduleManager;
 
-    public function __construct(ConfigContainerInterface $config)
+    public function __construct($configFiles)
     {
-        $this->config = $config;
-        $this->config->setWritePermission(false);
+        if (!is_array($configFiles)) {
+            $configFiles = [$configFiles];
+        }
         $this->container = require __DIR__.'/container.php';
+        $this->configManager = $this->container->get('config.manager');
+        $this->serviceManager = $this->container->get('service.manager');
+        foreach ($configFiles as $file) {
+            if (file_exists($file)) {
+                $this->config = $this->configManager->load('core', $file);
+            }
+        }
+        $this->serviceManager->set('core', $this->container);
         $this->container->setParameter('config', $this->config);
+        $this->config->setWritePermission(false);
         $this->container->setWritePermission(false);
         $this->initialize();
     }
@@ -111,10 +121,6 @@ class Application implements ApplicationInterface
         $this->view = $this->container->get('view');
         $this->router = $this->container->get('router');
         $this->eventManager = $this->container->get('event.manager');
-        $this->configManager = $this->container->get('config.manager');
-        $this->configManager->set('core', $this->config);
-        $this->serviceManager = $this->container->get('service.manager');
-        $this->serviceManager->set('core', $this->container);
         $this->ormManager = $this->container->get('orm.manager');
         $this->moduleManager = $this->container->get('module.manager');
         $this->eventManager->addSubscriber($this);
