@@ -47,10 +47,12 @@ class Application implements ApplicationInterface
         $this->configManager = $this->container->get('config.manager');
         $this->serviceManager = $this->container->get('service.manager');
         $this->loadConfigurationFiles($configFiles);
+        $this->config = $this->configManager->get('core');
         $this->serviceManager->set('core', $this->container);
         $this->container->setParameter('config', $this->config);
         $this->config->setWritePermission(false);
         $this->container->setWritePermission(false);
+        var_dump($this->config);
         $this->initialize();
     }
 
@@ -114,15 +116,15 @@ class Application implements ApplicationInterface
     {
         foreach ($configFiles as $file) {
             if (file_exists($file) && 'config' === basename(dirname($file))) {
-                $this->config = $this->configManager->load('core', $file);
+                $config = $this->configManager->load('core', $file);
                 break;
             }
         }
         foreach ($configFiles as $file) {
-            if (isset($this->config->runtime_mode)) {
+            if (isset($config->runtime_mode)) {
                 if (file_exists($file)
-                    && $this->config->runtime_mode === basename(dirname($file))) {
-                    $this->config = $this->configManager->load('core', $file);
+                    && $config->runtime_mode === basename(dirname($file))) {
+                    $this->configManager->load('core', $file);
                     break;
                 }
             }
