@@ -61,11 +61,6 @@ abstract class Controller
         $this->stream = $this->services->get('core')->get('response.stream');
     }
 
-    public function setViewPath($path)
-    {
-        $this->view->setPath($path);
-    }
-
     public function view($template, array $data = array())
     {
         $this->view->setTemplate($template);

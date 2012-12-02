@@ -13,7 +13,7 @@ class HomeController extends Controller
 
     public function preExecute()
     {
-        $this->setViewPath(__DIR__.'/../View');
+        $this->view->setPath(__DIR__.'/../View');
     }
 }
 
