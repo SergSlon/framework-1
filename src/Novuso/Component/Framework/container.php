@@ -135,8 +135,12 @@ $container->set('orm.manager', function ($container)
     $metadata = $config->data->metadataStrategy;
     $runtime = $config->runtimeMode;
     $prefix = $config->data->tablePrefix;
+    $ormManager = new Novuso\Component\Data\OrmManager($connection, $metadata, $runtime, $prefix);
+    if (isset($config->data->proxyDirectory)) {
+        $ormManager->setProxyDir($config->data->proxyDirectory);
+    }
 
-    return new Novuso\Component\Data\OrmManager($connection, $metadata, $runtime, $prefix);
+    return $ormManager;
 });
 
 $container->set('module.manager', function ()
