@@ -28,6 +28,7 @@ class Application implements ApplicationInterface
     protected $container;
     protected $request;
     protected $response;
+    protected $view;
     protected $router;
     protected $eventManager;
     protected $configManager;
@@ -38,8 +39,10 @@ class Application implements ApplicationInterface
     public function __construct(ConfigContainerInterface $config)
     {
         $this->config = $config;
+        $this->config->setWritePermission(false);
         $this->container = require __DIR__.'/container.php';
         $this->container->setParameter('config', $this->config);
+        $this->container->setWritePermission(false);
         $this->initialize();
     }
 
@@ -102,6 +105,7 @@ class Application implements ApplicationInterface
     {
         $this->request = $this->container->get('request');
         $this->response = $this->container->get('response');
+        $this->view = $this->container->get('view');
         $this->router = $this->container->get('router');
         
         // temporary
@@ -113,7 +117,9 @@ class Application implements ApplicationInterface
         
         $this->eventManager = $this->container->get('event.manager');
         $this->configManager = $this->container->get('config.manager');
+        $this->configManager->set('core', $this->config);
         $this->serviceManager = $this->container->get('service.manager');
+        $this->serviceManager->set('core', $this->container);
         $this->ormManager = $this->container->get('orm.manager');
         $this->moduleManager = $this->container->get('module.manager');
         $this->eventManager->addSubscriber($this);
@@ -125,6 +131,11 @@ class Application implements ApplicationInterface
     protected function loadModules()
     {
         $resolve = $this->container->get('event.modules.resolve');
+        $resolve->setConfigManager($this->configManager);
+        $resolve->setServiceManager($this->serviceManager);
+        $resolve->setOrmManager($this->ormManager);
+        $resolve->setRouter($this->router);
+        $resolve->setView($this->view);
         $resolved = $this->eventManager->dispatch(ModuleEvents::RESOLVE, $resolve);
     }
 

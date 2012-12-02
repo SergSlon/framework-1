@@ -80,6 +80,19 @@ $container->set('subscriber.exception', function ($container)
     );
 });
 
+$container->set('view', function ($container)
+{
+    $adapter = new Novuso\Component\View\Adapter\PhpAdapter();
+    $assetHelper = new Novuso\Component\View\Helper\AssetHelper();
+    $layoutHelper = new Novuso\Component\View\Helper\LayoutHelper();
+    $view = new Novuso\Component\View\View();
+    $view->setAdapter($adapter);
+    $view->addHelper($assetHelper);
+    $view->addHelper($layoutHelper);
+
+    return $view;
+});
+
 $container->set('event.manager', function ($container)
 {
     return new Novuso\Component\Event\EventManager();
