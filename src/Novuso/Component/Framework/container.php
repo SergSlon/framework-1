@@ -80,11 +80,31 @@ $container->set('subscriber.exception', function ($container)
     );
 });
 
+$container->set('view.adapter.php', function ()
+{
+    return new Novuso\Component\View\Adapter\PhpAdapter();
+});
+
+$container->set('view.adapter.twig', function ()
+{
+    return new Novuso\Component\View\Adapter\TwigAdapter();
+});
+
+$container->set('view.helper.asset', function ()
+{
+    return new Novuso\Component\View\Helper\AssetHelper();
+});
+
+$container->set('view.helper.layout', function ()
+{
+    return new Novuso\Component\View\Helper\LayoutHelper();
+});
+
 $container->set('view', function ($container)
 {
-    $adapter = new Novuso\Component\View\Adapter\PhpAdapter();
-    $assetHelper = new Novuso\Component\View\Helper\AssetHelper();
-    $layoutHelper = new Novuso\Component\View\Helper\LayoutHelper();
+    $adapter = $container->get('view.adapter.php');
+    $assetHelper = $container->get('view.helper.asset');
+    $layoutHelper = $container->get('view.helper.layout');
     $view = new Novuso\Component\View\View();
     $view->setAdapter($adapter);
     $view->addHelper($assetHelper);
