@@ -12,6 +12,8 @@
 namespace Novuso\Component\Framework;
 
 use Novuso\Component\Framework\Api\ApplicationInterface;
+use Novuso\Component\Framework\Event\ApplicationReadyEvent;
+use Novuso\Component\Framework\ApplicationEvents;
 use Novuso\Component\Config\Api\ConfigContainerInterface;
 use Novuso\Component\Module\ModuleEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -52,25 +54,37 @@ class Application implements ApplicationInterface
         $this->eventManager->addSubscriber($this->container->get('subscriber.response'));
         $this->eventManager->addSubscriber($this->container->get('subscriber.exception'));
         $this->eventManager->addSubscriber($this->container->get('subscriber.streamed'));
-        
-        // temporary
-        ob_start();
-
         $this->kernel = $this->container->get('kernel');
         $this->response = $this->kernel->handle($this->request);
         $this->response->send();
         $this->kernel->terminate($this->request, $this->response);
-
-        // temporary
-        ob_end_clean();
-    }
-
-    public function onKernelRequest(GetResponseEvent $event)
-    {
     }
 
     public function onKernelController(FilterControllerEvent $event)
     {
+        $controller = $event->getController();
+        if (is_array($controller) && is_object($controller[0])) {
+            $class = $controller[0];
+            $method = $controller[1];
+            if (method_exists($class, 'setConfigManager')) {
+                $class->setConfigManager($this->configManager);
+            }
+            if (method_exists($class, 'setServiceManager')) {
+                $class->setServiceManager($this->serviceManager);
+            }
+            if (method_exists($class, 'setOrmManager')) {
+                $class->setOrmManager($this->ormManager);
+            }
+            if (method_exists($class, 'setView')) {
+                $class->setView($this->view);
+            }
+            if (method_exists($class, 'setHttpFoundation')) {
+                $class->setHttpFoundation($this->request, $this->response);
+            }
+            if (method_exists($class, 'preExecute')) {
+                $class->preExecute();
+            }
+        }
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -82,22 +96,11 @@ class Application implements ApplicationInterface
         }
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-    }
-
-    public function onKernelTerminate(PostResponseEvent $event)
-    {
-    }
-
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST    => 'onKernelRequest',
             KernelEvents::CONTROLLER => 'onKernelController',
-            KernelEvents::VIEW       => 'onKernelView',
-            KernelEvents::RESPONSE   => 'onKernelResponse',
-            KernelEvents::TERMINATE  => 'onKernelTerminate'
+            KernelEvents::VIEW       => 'onKernelView'
         ];
     }
 
@@ -107,14 +110,6 @@ class Application implements ApplicationInterface
         $this->response = $this->container->get('response');
         $this->view = $this->container->get('view');
         $this->router = $this->container->get('router');
-        
-        // temporary
-        $this->router->get('home', '/', [
-            '_controller' => function () {
-                return 'Hello World';
-            }
-        ]);
-        
         $this->eventManager = $this->container->get('event.manager');
         $this->configManager = $this->container->get('config.manager');
         $this->configManager->set('core', $this->config);
@@ -141,6 +136,8 @@ class Application implements ApplicationInterface
 
     protected function applicationReady()
     {
+        $ready = new ApplicationReadyEvent();
+        $postReady = $this->eventManager->dispatch(ApplicationEvents::READY, $ready);
     }
 }
 

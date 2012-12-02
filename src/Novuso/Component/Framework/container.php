@@ -35,7 +35,7 @@ $container->set('response.stream', function ()
 
 $container->set('response.redirect', function ()
 {
-    return new Novuso\Component\Http\RedirectResponse();
+    return new Novuso\Component\Http\RedirectResponse('/');
 });
 
 $container->set('router', function ($container)

@@ -37,15 +37,8 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
     {
         return [
             'runtimeMode' => 'development',
-            'paths' => [
-                'root'    => __DIR__.'/Fixtures',
-                'config'  => __DIR__.'/Fixtures/config',
-                'module'  => __DIR__.'/Fixtures/module',
-                'public'  => __DIR__.'/Fixtures/public',
-                'storage' => __DIR__.'/Fixtures/storage',
-                'vendor'  => __DIR__.'/Fixtures/vendor'
-            ],
-            'data' => [
+            'paths' => [],
+            'data'  => [
                 'connection' => [
                     'dsn'           => 'sqlite:'.__DIR__.'/Fixtures/storage/database/application.sqlite',
                     'username'      => null,
@@ -56,7 +49,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
                 'tablePrefix'      => 'nfw_'
             ],
             'modules' => [
-                'Application'
+                'Novuso\Test\Framework\Stub\Application'
             ]
         ];
     }
