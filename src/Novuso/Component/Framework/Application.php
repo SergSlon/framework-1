@@ -114,14 +114,15 @@ class Application implements ApplicationInterface
     protected function loadConfigurationFiles($configFiles)
     {
         foreach ($configFiles as $file) {
-            if (file_exists($file) && 'config' === basename(dirname($file))) {
+            if (is_file($file) && is_readable($file)
+                && 'config' === basename(dirname($file))) {
                 $config = $this->configManager->load('core', $file);
                 break;
             }
         }
         foreach ($configFiles as $file) {
             if (isset($config->runtime_mode)) {
-                if (file_exists($file)
+                if (is_file($file) && is_readable($file)
                     && $config->runtime_mode === basename(dirname($file))) {
                     $this->configManager->load('core', $file);
                     break;

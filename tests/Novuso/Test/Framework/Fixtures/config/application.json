@@ -1,0 +1,16 @@
+{
+    "runtime-mode": "development",
+    "data": {
+        "connection": {
+            "dsn": "sqlite:%dir%/../storage/database/application.sqlite",
+            "username": null,
+            "password": null
+        },
+        "driver-options": [],
+        "metadata-strategy": "annotation",
+        "table-prefix": "nfw_"
+    },
+    "modules": [
+        "Novuso\\Test\\Framework\\Stub\\Application"
+    ]
+}

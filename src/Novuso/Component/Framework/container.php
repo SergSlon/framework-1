@@ -139,12 +139,17 @@ $container->set('db.connection', function ($container)
 {
     $config = $container->getParameter('config');
     $db = $config->data->connection;
+    if (isset($config->data->driver_options)) {
+        $driverOptions = $config->data->driver_options->toArray();
+    } else {
+        $driverOptions = [];
+    }
     
     return new Novuso\Component\Data\Connection(
         $db->dsn,
         $db->username,
         $db->password,
-        $db->driver_options->toArray()
+        $driverOptions
     );
 });
 

@@ -21,7 +21,8 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->app = new Application($this->getConfig());
+        $path = $this->getConfig();
+        $this->app = new Application($path);
     }
 
     public function testInterface()
@@ -35,7 +36,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
     private function getConfig()
     {
-        return __DIR__.'/Fixtures/config/application.php';
+        return __DIR__.'/Fixtures/config/application.json';
     }
 }
 

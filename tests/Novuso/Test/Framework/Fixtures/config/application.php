@@ -5,9 +5,9 @@ return [
         'connection' => [
             'dsn'            => 'sqlite:'.__DIR__.'/../storage/database/application.sqlite',
             'username'       => null,
-            'password'       => null,
-            'driver.options' => []
+            'password'       => null
         ],
+        'driver.options'    => [],
         'metadata.strategy' => 'annotation',
         'table.prefix'      => 'nfw_'
     ],
