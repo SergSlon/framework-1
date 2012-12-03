@@ -1,7 +1,7 @@
 <?php
 return [
     'runtime.mode' => 'development',
-    'data'  => [
+    'database'  => [
         'connection' => [
             'dsn'            => 'sqlite:'.__DIR__.'/../storage/database/application.sqlite',
             'username'       => null,

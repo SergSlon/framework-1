@@ -1,6 +1,6 @@
 {
     "runtime-mode": "development",
-    "data": {
+    "database": {
         "connection": {
             "dsn": "sqlite:%dir%/../storage/database/application.sqlite",
             "username": null,

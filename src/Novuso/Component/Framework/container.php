@@ -138,9 +138,9 @@ $container->set('service.manager', function ()
 $container->set('db.connection', function ($container)
 {
     $config = $container->getParameter('config');
-    $db = $config->data->connection;
-    if (isset($config->data->driver_options)) {
-        $driverOptions = $config->data->driver_options->toArray();
+    $db = $config->database->connection;
+    if (isset($config->database->driver_options)) {
+        $driverOptions = $config->database->driver_options->toArray();
     } else {
         $driverOptions = [];
     }
@@ -157,12 +157,12 @@ $container->set('orm.manager', function ($container)
 {
     $connection = $container->get('db.connection');
     $config = $container->getParameter('config');
-    $metadata = $config->data->metadata_strategy;
+    $metadata = $config->database->metadata_strategy;
     $runtime = $config->runtime_mode;
-    $prefix = $config->data->table_prefix;
+    $prefix = $config->database->table_prefix;
     $ormManager = new Novuso\Component\Data\OrmManager($connection, $metadata, $runtime, $prefix);
-    if (isset($config->data->proxy_directory)) {
-        $ormManager->setProxyDir($config->data->proxy_directory);
+    if (isset($config->database->proxy_directory)) {
+        $ormManager->setProxyDir($config->database->proxy_directory);
     }
 
     return $ormManager;
