@@ -67,6 +67,51 @@ class Application implements ApplicationInterface
         $this->kernel->terminate($this->request, $this->response);
     }
 
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
+    public function getEventManager()
+    {
+        return $this->eventManager;
+    }
+
+    public function getConfigManager()
+    {
+        return $this->configManager;
+    }
+
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
+    }
+
+    public function getOrmManager()
+    {
+        return $this->ormManager;
+    }
+
+    public function getModuleManager()
+    {
+        return $this->moduleManager;
+    }
+
     public function onKernelController(FilterControllerEvent $event)
     {
         $controller = $event->getController();
