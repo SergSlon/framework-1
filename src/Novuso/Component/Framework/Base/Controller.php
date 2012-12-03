@@ -56,9 +56,6 @@ abstract class Controller
     {
         $this->request = $request;
         $this->response = $response;
-        $this->redirect = $this->services->get('core')->get('response.redirect');
-        $this->json = $this->services->get('core')->get('response.json');
-        $this->stream = $this->services->get('core')->get('response.stream');
     }
 
     public function view($template, array $data = array())
@@ -66,12 +63,17 @@ abstract class Controller
         $this->view->setTemplate($template);
         $this->view->addData($this->data);
         $this->view->addData($data);
+        $this->response->setContent($this->view->render());
+        $this->response->prepare($this->request);
 
-        return $this->view->render();
+        return $this->response;
     }
 
     public function redirect($url)
     {
+        if (!isset($this->redirect)) {
+            $this->redirect = $this->services->get('core')->get('response.redirect');
+        }
         $this->redirect->setTargetUrl($url);
         $this->redirect->prepare($this->request);
 
@@ -80,6 +82,9 @@ abstract class Controller
 
     public function json(array $data)
     {
+        if (!isset($this->json)) {
+            $this->json = $this->services->get('core')->get('response.json');
+        }
         $this->json->setData($data);
         $this->json->prepare($this->request);
 
@@ -88,6 +93,9 @@ abstract class Controller
 
     public function stream(Closure $callback)
     {
+        if (!isset($this->stream)) {
+            $this->stream = $this->services->get('core')->get('response.stream');
+        }
         $this->stream->setCallback($callback);
         $this->stream->prepare($this->request);
 
