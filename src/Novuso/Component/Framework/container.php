@@ -132,7 +132,7 @@ $container->set('view', function ($container)
                 }
                 $viewHelpers[] = $viewHelper;
                 $container->setWritePermission(true);
-                $container->setParameter('view.helpers');
+                $container->setParameter('view.helpers', $viewHelpers);
                 $container->setWritePermission(false);
             }
         }
