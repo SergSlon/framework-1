@@ -17,6 +17,7 @@ use Novuso\Component\Data\Api\OrmManagerInterface;
 use Novuso\Component\View\Api\ViewInterface;
 use Novuso\Component\Http\Request;
 use Novuso\Component\Http\Response;
+use InvalidArgumentException;
 use Closure;
 
 abstract class Controller
@@ -30,7 +31,17 @@ abstract class Controller
     protected $services;
     protected $doctrine;
     protected $view;
+    protected $helpers = [];
     protected $data = [];
+
+    public function __get($key)
+    {
+        if (!isset($this->helpers[$key])) {
+            throw new InvalidArgumentException('Undefined property: '.$key);
+        }
+
+        return $this->helpers[$key];
+    }
 
     public function setConfigManager(ConfigManagerInterface $config)
     {
@@ -50,6 +61,12 @@ abstract class Controller
     public function setView(ViewInterface $view)
     {
         $this->view = $view;
+        if ($this->services->get('core')->hasParameter('view.helpers')) {
+            $helpers = $this->services->get('core')->getParameter('view.helpers');
+            foreach ($helpers as $helper) {
+                $this->helpers[$helper->getName()] = $helper;
+            }
+        }
     }
 
     public function setHttpFoundation(Request $request, Response $response)
