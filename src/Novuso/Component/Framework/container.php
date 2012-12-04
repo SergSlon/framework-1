@@ -102,13 +102,29 @@ $container->set('view.helper.layout', function ()
 
 $container->set('view', function ($container)
 {
-    $adapter = $container->get('view.adapter.php');
-    $assetHelper = $container->get('view.helper.asset');
-    $layoutHelper = $container->get('view.helper.layout');
+    $config = $container->getParameter('config');
     $view = new Novuso\Component\View\View();
-    $view->setAdapter($adapter);
-    $view->addHelper($assetHelper);
-    $view->addHelper($layoutHelper);
+    if (isset($config->view_options)) {
+        $options = $config->view_options;
+        if (isset($options->engine_adapter)) {
+            $engine = $options->engine_adapter;
+            if ($container->has('view.adapter.'.$engine)) {
+                $adapter = $container->get('view.adapter.'.$engine);
+                $view->setAdapter($adapter);
+            }
+        }
+        if (isset($options->engine_options)) {
+            $view->setOptions($options->engine_options->toArray());
+        }
+        if (isset($options->default_helpers)) {
+            foreach ($options->default_helpers as $helper) {
+                $view->addHelper(new $helper());
+            }
+        }
+        if (isset($options->default_path)) {
+            $view->setPath($options->default_path);
+        }
+    }
 
     return $view;
 });
