@@ -42,8 +42,13 @@ $container->set('router', function ($container)
 {
     $context = new Symfony\Component\Routing\RequestContext();
     $context->fromRequest($container->get('request'));
+    $router = new Novuso\Component\Routing\Router($context);
+    $config = $container->getParameter('config');
+    if (isset($config->default_routes)) {
+        $router->load($config->default_routes);
+    }
 
-    return new Novuso\Component\Routing\Router($context);
+    return $router;
 });
 
 $container->set('matcher', function ($container)
