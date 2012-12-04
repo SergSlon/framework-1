@@ -123,7 +123,17 @@ $container->set('view', function ($container)
         }
         if (isset($options->default_helpers)) {
             foreach ($options->default_helpers as $helper) {
-                $view->addHelper(new $helper());
+                $viewHelper = new $helper();
+                $view->addHelper($viewHelper);
+                if ($container->hasParameter('view.helpers')) {
+                    $viewHelpers = $container->getParameter('view.helpers');
+                } else {
+                    $viewHelpers = [];
+                }
+                $viewHelpers[] = $viewHelper;
+                $container->setWritePermission(true);
+                $container->setParameter('view.helpers');
+                $container->setWritePermission(false);
             }
         }
         if (isset($options->default_path)) {
