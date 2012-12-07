@@ -2,7 +2,7 @@
 /**
  * This file is part of the Novuso Framework
  *
- * A web application framework for PHP 5.4+
+ * A web application framework for PHP
  *
  * @author    John Nickell
  * @copyright Copyright (c) 2012, Novuso. (http://novuso.com/)
