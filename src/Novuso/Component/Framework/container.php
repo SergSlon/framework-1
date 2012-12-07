@@ -128,7 +128,7 @@ $container->set('view', function ($container)
                 if ($container->hasParameter('view.helpers')) {
                     $viewHelpers = $container->getParameter('view.helpers');
                 } else {
-                    $viewHelpers = [];
+                    $viewHelpers = array();
                 }
                 $viewHelpers[] = $viewHelper;
                 $container->setWritePermission(true);
@@ -173,7 +173,7 @@ $container->set('db.connection', function ($container)
     if (isset($config->database->driver_options)) {
         $driverOptions = $config->database->driver_options->toArray();
     } else {
-        $driverOptions = [];
+        $driverOptions = array();
     }
     
     return new Novuso\Component\Data\Connection(

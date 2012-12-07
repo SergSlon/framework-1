@@ -1,17 +1,17 @@
 <?php
-return [
-    'runtime.mode' => 'development',
-    'database'  => [
-        'connection' => [
+return array(
+    'runtime.mode'   => 'development',
+    'database'       => array(
+        'connection' => array(
             'dsn'            => 'sqlite:'.__DIR__.'/../storage/database/application.sqlite',
             'username'       => null,
             'password'       => null
-        ],
-        'driver.options'    => [],
+        ),
+        'driver.options'    => array(),
         'metadata.strategy' => 'annotation',
         'table.prefix'      => 'nfw_'
-    ],
-    'modules' => [
+    ),
+    'modules' => array(
         'novuso.test.framework.stub.application' => 'Novuso\Test\Framework\Stub\Application'
-    ]
-];
+    )
+);

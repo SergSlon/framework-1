@@ -2,7 +2,7 @@
 /**
  * This file is part of the Novuso Framework
  *
- * A web application framework for PHP 5.4+
+ * A web application framework for PHP
  *
  * @author    John Nickell
  * @copyright Copyright (c) 2012, Novuso. (http://novuso.com/)
@@ -41,7 +41,7 @@ class Application implements ApplicationInterface
     public function __construct($configFiles)
     {
         if (!is_array($configFiles)) {
-            $configFiles = [$configFiles];
+            $configFiles = array($configFiles);
         }
         $this->container = require __DIR__.'/container.php';
         $this->configManager = $this->container->get('config.manager');
@@ -150,10 +150,10 @@ class Application implements ApplicationInterface
 
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             KernelEvents::CONTROLLER => 'onKernelController',
             KernelEvents::VIEW       => 'onKernelView'
-        ];
+        );
     }
 
     protected function loadConfigurationFiles($configFiles)

@@ -2,7 +2,7 @@
 /**
  * This file is part of the Novuso Framework
  *
- * A web application framework for PHP 5.4+
+ * A web application framework for PHP
  *
  * @author    John Nickell
  * @copyright Copyright (c) 2012, Novuso. (http://novuso.com/)
@@ -31,8 +31,8 @@ abstract class Controller
     protected $services;
     protected $doctrine;
     protected $view;
-    protected $helpers = [];
-    protected $data = [];
+    protected $helpers = array();
+    protected $data = array();
 
     public function __get($key)
     {

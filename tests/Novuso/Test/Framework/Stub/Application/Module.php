@@ -17,7 +17,7 @@ class Module implements RouteProviderInterface
 {
     public function getRouteFiles()
     {
-        return [__DIR__.'/Config/routes.php'];
+        return array(__DIR__.'/Config/routes.php');
     }
 }
 

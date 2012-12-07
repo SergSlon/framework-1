@@ -1,9 +1,9 @@
 {
     "name": "novuso/framework",
-    "description": "Web application framework for PHP 5.4+",
+    "description": "Web application framework for PHP",
     "license": "MIT",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.3.3",
         "novuso/config": "dev-master",
         "novuso/console": "dev-master",
         "novuso/container": "dev-master",

@@ -1,6 +1,6 @@
 <?php
 
-$router->get('home', '/', ['_controller' => controller().'\HomeController::getIndex']);
+$router->get('home', '/', controller().'\HomeController::getIndex');
 
 // not needed; just here because of the crazy-long namespace
 function controller()
