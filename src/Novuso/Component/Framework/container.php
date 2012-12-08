@@ -163,7 +163,10 @@ $container->set('config.manager', function ()
 
 $container->set('service.manager', function ()
 {
-    return new Novuso\Component\Container\ServiceManager();
+    $serviceManager = new Novuso\Component\Container\ServiceManager();
+    $serviceManager->addLoader(new Novuso\Component\Container\Loader\PhpFileLoader());
+
+    return $serviceManager;
 });
 
 $container->set('db.connection', function ($container)
